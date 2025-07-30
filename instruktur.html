@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Data Instruktur - PT Protech Academy</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #222d44;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    nav.sidebar {
+      width: 220px;
+      background: #222d44;
+      color: white;
+      min-height: 100vh;
+      padding: 20px 10px;
+      box-sizing: border-box;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    nav.sidebar .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-left: 10px;
+    }
+
+    nav.sidebar .logo-container img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    nav.sidebar h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    nav.sidebar a {
+      display: block;
+      padding: 12px 15px;
+      color: #ddd;
+      text-decoration: none;
+      margin-bottom: 8px;
+      border-radius: 5px;
+    }
+
+    nav.sidebar a.active,
+    nav.sidebar a:hover {
+      background: #5c77f2;
+      color: white;
+    }
+
+    main.content {
+      flex: 1;
+      padding: 25px 40px;
+      box-sizing: border-box;
+      margin-left: 220px;
+      overflow-x: auto;
+      background: #222d44;
+      color: white;
+      min-height: calc(100vh - 60px);
+    }
+
+    h1 {
+      margin-top: 0;
+      color: white;
+    }
+
+    .form-box {
+      background: #2f3a5b;
+      padding: 15px 20px;
+      border-radius: 6px;
+      margin-bottom: 25px;
+      max-width: 600px;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-box input {
+      width: calc(33% - 10px);
+      padding: 8px 10px;
+      margin-right: 15px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .form-box input:last-child {
+      margin-right: 0;
+    }
+
+    .form-box button {
+      padding: 8px 18px;
+      background: #28a745;
+      border: none;
+      color: white;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .form-box button:hover {
+      background: #1e7e34;
+    }
+
+    .toolbar {
+      margin-bottom: 15px;
+    }
+
+    .toolbar input[type="text"] {
+      padding: 7px 10px;
+      width: 280px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+
+    .toolbar button {
+      padding: 7px 14px;
+      margin-right: 5px;
+      background: #5c77f2;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .toolbar button:hover {
+      background: #405ac9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #2f3a5b;
+      color: white;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+    }
+
+    table th, table td {
+      border: 1px solid #444;
+      padding: 10px;
+      text-align: left;
+    }
+
+    table th {
+      background: #1a243b;
+    }
+
+    footer.footer {
+      height: 60px;
+      background-color: #222d44;
+      color: white;
+      text-align: center;
+      padding: 15px 20px;
+      font-size: 14px;
+      margin-left: 220px;
+    }
+  </style>
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="logo-container">
+    <img src="logo.jpg" alt="Logo Protech" />
+    <h2>PT Protech Academy</h2>
+  </div>
+  <a href="dashboard.html">🏠 Dashboard</a>
+  <a href="instruktur.html" class="active">👨‍🏫 Data Instruktur</a>
+  <a href="siswa.html">👨‍🎓 Data Siswa</a>
+  <a href="login.html">🔐 Logout</a>
+</nav>
+
+<main class="content">
+  <h1>Data Instruktur</h1>
+
+  <div class="form-box" id="formInstruktur">
+    <input type="text" id="nama" placeholder="Nama Instruktur" required />
+    <input type="text" id="bidang" placeholder="Bidang Keahlian" required />
+    <input type="email" id="email" placeholder="Email" required />
+    <button id="btnTambah">Tambah</button>
+  </div>
+
+  <div class="toolbar">
+    <input type="text" id="searchInput" placeholder="Cari instruktur..." />
+    <button id="btnPrint">Cetak</button>
+    <button id="btnExcel">Ekspor Excel</button>
+    <button id="btnPDF">Ekspor PDF</button>
+    <input type="file" id="importExcel" accept=".xlsx" style="margin-left: 15px;" />
+  </div>
+
+  <table id="tabelInstruktur">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Nama</th>
+        <th>Bidang</th>
+        <th>Email</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</main>
+
+<footer class="footer">
+  PT Protech Academy Binjai Semua hak cipta dilindungi. &copy; <span id="year"></span>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  let dataInstruktur = JSON.parse(localStorage.getItem('instruktur')) || [];
+  const tabelBody = document.querySelector('#tabelInstruktur tbody');
+  const inputNama = document.getElementById('nama');
+  const inputBidang = document.getElementById('bidang');
+  const inputEmail = document.getElementById('email');
+  const btnTambah = document.getElementById('btnTambah');
+  const searchInput = document.getElementById('searchInput');
+  let editIndex = -1;
+
+  function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email.toLowerCase());
+  }
+
+  function renderTabel() {
+    const keyword = searchInput.value.toLowerCase();
+    tabelBody.innerHTML = '';
+    let no = 1;
+    dataInstruktur.forEach((item, index) => {
+      if (
+        item.nama.toLowerCase().includes(keyword) ||
+        item.bidang.toLowerCase().includes(keyword) ||
+        item.email.toLowerCase().includes(keyword)
+      ) {
+        const row = document.createElement('tr');
+
+        if (editIndex === index) {
+          row.innerHTML = `
+            <td>${no++}</td>
+            <td><input type="text" id="editNama" value="${item.nama}" /></td>
+            <td><input type="text" id="editBidang" value="${item.bidang}" /></td>
+            <td><input type="email" id="editEmail" value="${item.email}" /></td>
+            <td>
+              <button id="btnSave">Save</button>
+              <button id="btnCancel">Cancel</button>
+            </td>
+          `;
+          row.querySelector('#btnSave').addEventListener('click', () => {
+            const newNama = row.querySelector('#editNama').value.trim();
+            const newBidang = row.querySelector('#editBidang').value.trim();
+            const newEmail = row.querySelector('#editEmail').value.trim();
+
+             if (!newNama || !newBidang || !newEmail) return alert('Semua field harus diisi!');
+            if (!validateEmail(newEmail)) return alert('Format email tidak valid!');
+
+            dataInstruktur[index] = { nama: newNama, bidang: newBidang, email: newEmail };
+            localStorage.setItem('instruktur', JSON.stringify(dataInstruktur));
+            editIndex = -1;
+            renderTabel();
+          });
+
+          row.querySelector('#btnCancel').addEventListener('click', () => {
+            editIndex = -1;
+            renderTabel();
+          });
+        } else {
+          row.innerHTML = `
+            <td>${no++}</td>
+            <td>${item.nama}</td>
+            <td>${item.bidang}</td>
+            <td>${item.email}</td>
+            <td>
+              <button class="btnEdit">Edit</button>
+              <button class="btnHapus">Hapus</button>
+            </td>
+          `;
+
+          row.querySelector('.btnEdit').addEventListener('click', () => {
+            editIndex = index;
+            renderTabel();
+          });
+
+          row.querySelector('.btnHapus').addEventListener('click', () => {
+            if (confirm('Yakin ingin menghapus data ini?')) {
+              dataInstruktur.splice(index, 1);
+              localStorage.setItem('instruktur', JSON.stringify(dataInstruktur));
+              renderTabel();
+            }
+          });
+        }
+
+        tabelBody.appendChild(row);
+      }
+    });
+  }
+
+  btnTambah.addEventListener('click', () => {
+    const nama = inputNama.value.trim();
+    const bidang = inputBidang.value.trim();
+    const email = inputEmail.value.trim();
+
+    if (!nama || !bidang || !email) return alert('Semua field wajib diisi!');
+    if (!validateEmail(email)) return alert('Format email tidak valid!');
+
+    dataInstruktur.push({ nama, bidang, email });
+    localStorage.setItem('instruktur', JSON.stringify(dataInstruktur));
+    inputNama.value = '';
+    inputBidang.value = '';
+    inputEmail.value = '';
+    renderTabel();
+  });
+
+  searchInput.addEventListener('input', renderTabel);
+
+  document.getElementById('btnPrint').addEventListener('click', () => {
+    const printWindow = window.open('', '', 'width=800,height=600');
+    printWindow.document.write('<html><head><title>Cetak Data Instruktur</title></head><body>');
+    printWindow.document.write('<h1>Data Instruktur</h1>');
+    printWindow.document.write(document.getElementById('tabelInstruktur').outerHTML);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
+  });
+
+  document.getElementById('btnExcel').addEventListener('click', () => {
+    const ws_data = [
+      ['No', 'Nama', 'Bidang', 'Email'],
+      ...dataInstruktur.map((item, i) => [i + 1, item.nama, item.bidang, item.email])
+    ];
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    XLSX.utils.book_append_sheet(wb, ws, 'Instruktur');
+    XLSX.writeFile(wb, 'Data_Instruktur_Protech.xlsx');
+  });
+
+  document.getElementById('btnPDF').addEventListener('click', () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.text('Data Instruktur PT Protech Academy', 10, 10);
+
+    let startY = 20;
+    dataInstruktur.forEach((item, i) => {
+      doc.text(`${i + 1}. ${item.nama} - ${item.bidang} - ${item.email}`, 10, startY);
+      startY += 10;
+    });
+    doc.save('Data_Instruktur_Protech.pdf');
+  });
+
+  document.getElementById('importExcel').addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const importedData = XLSX.utils.sheet_to_json(worksheet);
+
+      importedData.forEach((row) => {
+        if (row.Nama && row.Bidang && row.Email) {
+          dataInstruktur.push({
+            nama: row.Nama,
+            bidang: row.Bidang,
+            email: row.Email
+          });
+        }
+      });
+
+      localStorage.setItem('instruktur', JSON.stringify(dataInstruktur));
+      renderTabel();
+      e.target.value = '';
+    };
+    reader.readAsArrayBuffer(file);
+  });
+
+  renderTabel();
+</script>
+
+</body>
+</html>

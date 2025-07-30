@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - PT Protech Academy Binjai</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="login-container">
+        <img src="logo.jpg" alt="Logo Protech Academy" class="logo">
+        <h2>Login Protech</h2>
+        <form id="loginForm">
+            <label for="username">Kata Kunci</label>
+            <input type="text" id="username" name="username" placeholder="Masukkan username" required>
+
+            <label for="password">Kata Sandi</label>
+            <input type="password" id="password" name="password" placeholder="Masukkan password" required>
+
+            <button type="submit">Masuk</button>
+            <p id="error" class="error-message"></p>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const error = document.getElementById("error");
+
+            if (username === "protech" && password === "protech") {
+                window.location.href = "dashboard.html";
+            } else {
+                error.textContent = "Username atau password salah.";
+                error.style.color = "red";
+            }
+        });
+    </script>
+</body>
+</html>
